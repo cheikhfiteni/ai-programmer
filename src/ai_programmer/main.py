@@ -42,6 +42,14 @@ def generate_code_for_file(file_name, message_history):
     # Extract the generated code
     generated_code = completion.choices[0].message.content.strip()
 
+    if generated_code.lower().startswith('here'):
+        # Split the code into lines
+        lines = generated_code.split('\n')
+        # Remove the first line
+        lines = lines[1:]
+        # Join the remaining lines back into a single string
+        generated_code = '\n'.join(lines)
+
     # Check if the generated code is wrapped in markdown code block syntax
     if '```' in generated_code:
         # Split the code into lines
