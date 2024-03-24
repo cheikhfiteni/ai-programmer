@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 output/
 
+# dev logs
+prompt.txt
