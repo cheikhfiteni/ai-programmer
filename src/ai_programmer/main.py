@@ -12,7 +12,7 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 def generate_file_structure(project_name, frameworks, description):
     # Use OpenAI's API to generate code based on the project name and frameworks
     # This is a simplified example, you'll need to format the prompt for your specific use case
-    prompt = f"Create a full stack web app demo called '{project_name}' using {frameworks}. The project file description is as follows: {description}. Output the file structure without any extraneous text as comma-separated values, without any introductory text."
+    prompt = f"Create a full stack web app demo called '{project_name}' using {frameworks}. The project file description is as follows: {description}. Output the file structure without any extraneous text as comma-separated values, without any introductory or extra text."
     completion = client.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[
@@ -59,11 +59,16 @@ def write_code_to_files(output_dir, files, description):
     ]
 
     for file_name in files:
-        code, message_history = generate_code_for_file(file_name, message_history)
-        file_path = os.path.join(output_dir, file_name)
-        with open(file_path, 'w') as f:
-            f.write(code)
-        print(f"Code for {file_name} written successfully.")
+        # Check if the path has a file extension, indicating that it's a file
+        if '.' in os.path.basename(file_name):
+            code, message_history = generate_code_for_file(file_name, message_history)
+            file_path = os.path.join(output_dir, file_name)
+            with open(file_path, 'w') as f:
+                f.write(code)
+            print(f"Code for {file_name} written successfully.")
+        else:
+            # It's a directory, so continue without writing code
+            continue
 
 def create_file_structure(output_dir, files):
     # Create the file structure in the output directory
@@ -116,7 +121,7 @@ def main():
     # Log the inputs
     log_inputs(project_name, frameworks, description)
 
-    
+
     files = generate_file_structure(project_name, frameworks, description)
     output_dir = os.path.join("output", project_name)
     create_file_structure(output_dir, files)
