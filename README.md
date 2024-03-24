@@ -27,3 +27,9 @@ Run with ```python -m src.ai_programmer.main```
 ### Design
 
 If a file (A) imports another file (B) it is actually more important for file B to have insight into A's implementation than vice versa to have a consistent contract. Or maybe...
+
+### Core frustration
+
+The final structures can vary wildly in sophistication from prompt to prompt, not flexible enough to make low_entropy edits yet. Being able to critique the model and say "you know I rather your final strcuture be like xyz" is important. Need to log why I like something or not, and use that for long-term memory and post-training DPO. Can summarize ahead of prompt after having on machine for a while.
+
+Being able to regenerate was such a good add, because if you like a file strucutre getting better quality code from improved recursion down the line is ++. Also good way to benchmark changes
