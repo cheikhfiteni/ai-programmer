@@ -26,7 +26,6 @@ def generate_code(project_name, frameworks, description):
     return file_paths
 
 def write_code_to_files(description, file_name, output_dir):
-    os.makedirs(output_dir, exist_ok=True)
     code = description.replace(", ", "\n")
     with open(os.path.join(output_dir, file_name), 'w') as f:
         f.write(code)
@@ -47,9 +46,29 @@ def create_file_structure(output_dir, files):
             os.makedirs(file_path, exist_ok=True)
             print(file_path, ' directory created successfully')
 
+def handle_dependencies(frameworks):
+    # Handle dependencies based on the frameworks used
+    dependencies = {
+        "React": "npm install react",
+        "Vue": "npm install vue",
+        "Angular": "npm install angular"
+    }
+    frameworks = frameworks.split(',')
+    for framework in frameworks:
+        if framework in dependencies:
+            print(dependencies[framework])
+
+def get_package_manager():
+    valid_package_managers = ['pip', 'yarn', 'npm']
+    package_manager = input("Enter the package manager to use: ").strip().lower()
+    if package_manager not in valid_package_managers:
+        raise ValueError(f"Invalid package manager. Supported package managers are: {', '.join(valid_package_managers)}")
+    return package_manager
+
 def main():
     project_name = input("Enter the name of the project: ")
     frameworks = input("Enter the frameworks to use, comma-separated: ")
+    package_manager = get_package_manager()
     description = input("Enter the project file description: ")
     files = generate_code(project_name, frameworks, description)
     output_dir = os.path.join("output", project_name)
