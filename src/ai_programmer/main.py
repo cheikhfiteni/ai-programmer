@@ -98,6 +98,18 @@ def create_file_structure(output_dir, files):
             os.makedirs(file_path, exist_ok=True)
             print(file_path, ' directory created successfully')
 
+def get_file_structure(directory):
+    file_structure = []
+
+    for root, dirs, files in os.walk(directory):
+        # Add the directory path
+        file_structure.append(root)
+        # Add the file paths
+        for file in files:
+            file_structure.append(str(os.path.join(root, file)))
+
+    return file_structure
+
 def handle_dependencies(frameworks):
     # Handle dependencies based on the frameworks used
     dependencies = {
@@ -126,16 +138,30 @@ def log_inputs(project_name, frameworks, description):
     logging.info(log_message)
 
 def main():
-    project_name = input("Enter the name of the project: ")
-    frameworks = input("Enter the frameworks to use, comma-separated: ")
-    description = input("Enter the project file description: ")
+    create_new = input("Do you want to create a new project? (y/n): ").strip().lower()
+    if create_new == 'y':
+        project_name = input("Enter the name of the project: ")
+        frameworks = input("Enter the frameworks to use, comma-separated: ")
+        description = input("Enter the project file description: ")
 
-    # Log the inputs
-    log_inputs(project_name, frameworks, description)
+        # Log the inputs
+        log_inputs(project_name, frameworks, description)
 
+        files = generate_file_structure(project_name, frameworks, description)
+        output_dir = os.path.join("output", project_name)
+        create_file_structure(output_dir, files)
+    else:
+        confirm_regeneration = input("Do you want to regenerate an existing project? (y/n): ").strip().lower()
+        if confirm_regeneration == 'y':
+            output_dir = input("Enter the directory of the project to regenerate: ").strip()
+            files = get_file_structure(output_dir)
+            output_dir = os.path.join(output_dir, '_regenerated')
+            description = "Thinking step by step, infer project description from file structure."
+        else:
+            print("No action selected. Exiting.")
+            return
+        
 
-    files = generate_file_structure(project_name, frameworks, description)
-    output_dir = os.path.join("output", project_name)
     create_file_structure(output_dir, files)
     write_code_to_files(output_dir, files, description)
 
