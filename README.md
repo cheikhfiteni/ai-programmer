@@ -23,3 +23,7 @@ Need to keep track of what the package-manager installs will be is important. So
 ### Usage
 
 Run with ```python -m src.ai_programmer.main```
+
+### Design
+
+If a file (A) imports another file (B) it is actually more important for file B to have insight into A's implementation than vice versa to have a consistent contract. Or maybe...
