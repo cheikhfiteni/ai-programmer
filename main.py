@@ -35,10 +35,17 @@ def create_file_structure(output_dir, files):
     # Create the file structure in the output directory
     for file in files:
         file_path = os.path.join(output_dir, file)
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        print(file_path, ' created successfully')
-        with open(file_path, 'w') as f:
-            f.write("")
+        # Check if the path has a file extension
+        if '.' in os.path.basename(file_path):
+            # It's a file, create necessary directories and then the file
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, 'w') as f:
+                f.write("")
+            print(file_path, ' created successfully')
+        else:
+            # It's a directory, create it
+            os.makedirs(file_path, exist_ok=True)
+            print(file_path, ' directory created successfully')
 
 def main():
     project_name = input("Enter the name of the project: ")
