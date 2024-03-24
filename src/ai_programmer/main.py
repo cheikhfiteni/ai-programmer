@@ -30,7 +30,7 @@ def generate_code_for_file(file_name, message_history):
     # Add a user message indicating the file to generate code for
     message_history.append({
         "role": "user",
-        "content": f"File: {file_name}"
+        "content": f"File: {file_name}. Please provide the code as plain text without any comments or markdown."
     })
 
     # Request code generation from OpenAI. Switch to 4 for more performance later.
@@ -41,6 +41,18 @@ def generate_code_for_file(file_name, message_history):
 
     # Extract the generated code
     generated_code = completion.choices[0].message.content.strip()
+
+    # Check if the generated code is wrapped in markdown code block syntax
+    if '```' in generated_code:
+        # Split the code into lines
+        lines = generated_code.split('\n')
+        # Find the indices of the lines containing the starting and ending backticks
+        start_idx = next((i for i, line in enumerate(lines) if '```' in line), None)
+        end_idx = next((i for i, line in enumerate(lines[start_idx + 1:], start=start_idx + 1) if '```' in line), None)
+        
+        # Extract the code within the markdown code block, excluding the lines with backticks
+        if start_idx is not None and end_idx is not None:
+            generated_code = '\n'.join(lines[start_idx + 1:end_idx]).strip()
 
     # Add the generated code as a system message to the history
     message_history.append({
