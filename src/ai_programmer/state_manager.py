@@ -23,12 +23,6 @@ def handle_package_json_change(project_root: str, package_manager: str = 'npm'):
     """
     pass
 
-
-
-
-
-
-
 def update_imports(file_path: str, project_root: str, imports_dict: dict, package_manager: str = 'npm'):
     """
     Update the imports in a given file and record the imports in a dictionary.
